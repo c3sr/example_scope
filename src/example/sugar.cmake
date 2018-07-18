@@ -14,5 +14,6 @@ include(sugar_files)
 sugar_files(
     example_SOURCES
     example.cpp
+    init.cpp
 )
 

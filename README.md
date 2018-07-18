@@ -24,27 +24,39 @@ Callbacks can be registered with the INIT() macro:
 // plugin/src/init.cpp
 #include "scope/init/init.hpp
 
-void plugin_callback(int argc, char **argv) {
+void plugin_init(int argc, char **argv) {
     (void) argc;
     (void) argv;
 }
 
-INIT(mycallback);
+INIT(pugin_init);
 ```
 
 Scope does not guarantee any ordering for callback execution.
 
 ## Structure
 
-* `src`
 
-* `docs`
 
-* `CMakeLists.txt`
+### `CMakeLists.txt`
 
-## Adding Sources
+The plugin `CMakeLists.txt` should 
+* `sugar_include` the plugin sources
+* `add_library` to create a plugin library
+* find any required packages needed by the plugin
+* link any required libraries with the PUBLIC keyword so that Scope is also linked with them
+```
+target_link_libraries(example_scope PUBLIC required-library)
+```
 
 Scope provides a python script for generating `sugar.cmake` files.
 It should be invoked like this whenever source files are added or moved in the plugin:
 
     $ [scope-dir]/tools/generate_sugar_files.py --top [plugin-dir]/src --var plugin-name
+
+This will cause `plugin-name_SOURCES` and `plugin-name_CUDA_SOURCES` to be defined.
+These are most likely the variables that should be expanded when using `add_library` in the plugin `CMakeLists.txt`.
+
+### `docs`
+
+The plugin `docs` folder should describe all of the benchmarks created by the plugin.
