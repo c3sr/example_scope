@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.8)
 sugar_include("src")
 
 # The plugin is a static library that Scope will be linked with
-add_library(example_scope ${example_SOURCES} ${example_CUDA_SOURCES} )
+add_library(example_scope OBJECT ${example_SOURCES} ${example_CUDA_SOURCES} )
 target_include_directories(example_scope PRIVATE 
     ${SRC_DIR}
     ${THIRDPARTY_DIR}
