@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 
 # Look for sugar.cmake files in the plugin src directory
 sugar_include("src")
