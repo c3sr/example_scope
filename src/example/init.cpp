@@ -17,7 +17,7 @@ int example_init(int argc, char **argv) {
     parse(argc, argv);
     if (version) {
         // Print a version string (this is not a good version string)
-        std::cout << "Example|Scope - a Scope project" << std::endl;
+        std::cout << "Example|Scope <your version string here>" << std::endl;
 
         // return 0 so that the Scope init infrastructure continues
         return 0;
