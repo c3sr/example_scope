@@ -10,6 +10,7 @@ Download latest Example|Scope
 ```
 curl -L https://github.com/c3sr/example_scope/archive/master.zip -o master.zip
 unzip master.zip
+rm master.zip
 mv example_scope-master new_scope
 ```
 
