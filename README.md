@@ -3,6 +3,16 @@
 This is an example benchmark plugin for the [Scope](github.com/rai-project/scopes) benchmark project.
 It most be integrated with Scope to build.
 
+## Quickstart
+
+Download latest Example|Scope
+
+```
+curl -L https://github.com/c3sr/example_scope/archive/master.zip -o master.zip
+unzip master.zip
+mv example_scope-master new_scope
+```
+
 ## Structure (Required)
 
 ```
