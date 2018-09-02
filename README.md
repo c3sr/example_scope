@@ -150,7 +150,7 @@ void plugin_init(int argc, char **argv) {
     (void) argv;
 }
 
-INIT(pugin_init);
+SCOPE_INIT(pugin_init);
 ```
 
 ## Citation
