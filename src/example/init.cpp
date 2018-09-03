@@ -11,7 +11,7 @@
 //     }
 // }
 
-int example_init(int argc, char **argv) {
+int example_init(int argc, char *const * argv) {
     
     // Do something with some command line flags
     // parse(argc, argv);
