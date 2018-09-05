@@ -15,11 +15,5 @@ sugar_files(
     example_SOURCES
     example.cpp
     init.cpp
-    version.cpp
-)
-
-sugar_files(
-  example_HEADERS
-  version.hpp.in
 )
 

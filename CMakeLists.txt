@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(Example|Scope LANGUAGES CXX VERSION 1.0.0)
-
 include(ScopeStatus)
 
 # Look for sugar.cmake files in the plugin src directory
@@ -28,8 +27,8 @@ target_compile_features(example_scope PUBLIC cxx_std_11)
 set_property(TARGET example_scope PROPERTY CUDA_STANDARD 11)
 target_link_libraries(example_scope PRIVATE benchmark::benchmark)
 
-scope_status("${PROJECT_SOURCE_DIR}/.../version.hpp.in -> ${PROJECT_BINARY_DIR}/.../version.hpp")
+scope_status("${PROJECT_SOURCE_DIR}/src/config.hpp.in -> ${PROJECT_BINARY_DIR}/src/config.hpp")
 configure_file (
-    "${PROJECT_SOURCE_DIR}/src/example/version.hpp.in"
-    "${PROJECT_BINARY_DIR}/src/example/version.hpp"
+    "${PROJECT_SOURCE_DIR}/src/config.hpp.in"
+    "${PROJECT_BINARY_DIR}/src/config.hpp"
 )
