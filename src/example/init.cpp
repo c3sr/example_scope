@@ -5,7 +5,17 @@
 
 #include "config.hpp"
 
-int example_init(int argc, char *const * argv) {
+
+// Declare a new flag
+DECLARE_FLAG_bool(example);
+DEFINE_FLAG_bool(example, false, "an example flag");
+
+SCOPE_REGISTER_OPTS(
+    clara::Opt(FLAG(example))["-e1"]("example flag (from Example|Scope)"),
+    clara::Opt(FLAG(example))["-e2"]("another flag (from Example|Scope)")
+);
+
+int example_init() {
     
     // Do something with some command line flags
     // parse(argc, argv);
@@ -29,5 +39,5 @@ int example_init(int argc, char *const * argv) {
     return 0;
 }
 
-SCOPE_INIT(example_init);
+SCOPE_REGISTER_INIT(example_init);
 
