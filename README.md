@@ -1,11 +1,11 @@
 # Example|Scope
 
-This is an example benchmark plugin for the [Scope](github.com/rai-project/scopes) benchmark project.
-It most be integrated with Scope to build.
+This is an example benchmark plugin for the [SCOPE](github.com/rai-project/scope) benchmark project.
+It most be integrated with SCOPE to build.
 
 ## Quickstart
 
-Download latest Example|Scope
+Download latest Example|Scope and create a new_scope.
 
 ```
 curl -L https://github.com/c3sr/example_scope/archive/master.zip -o master.zip
@@ -35,7 +35,7 @@ example_scope
 
 ### `CMakeLists.txt`
 
-Example|Scope will be included in Scope with CMake `add_subdirectory`, and this `CMakeLists.txt` is filled accordingly.
+Example|Scope will be included in SCOPE with CMake `add_subdirectory`, and this `CMakeLists.txt` is filled accordingly.
 CMake 3.12+ is needed for proper object library support.
 
 It should do the following things:
@@ -59,7 +59,12 @@ sugar_include(src)
 ```cmake
 add_library(example_scope OBJECT ${example_SOURCES} ${example_CUDA_SOURCES})
 ```
-* link any required libraries with the PUBLIC keyword so that Scope is also linked with them
+* Add includes and library linking for utilities provided through SCOPE:
+```cmake
+target_include_scope_directories(example_scope)
+target_link_scope_libraries(example_scope)
+```
+* link any other required libraries with the PUBLIC keyword so that Scope is also linked with them
 ```cmake
 target_link_libraries(example_scope PUBLIC required-library)
 ```
@@ -76,15 +81,12 @@ configure_file (
     "${PROJECT_BINARY_DIR}/src/config.hpp"
 )
 ```
-* Include the Scope utility directories and the location of the generated `config.hpp` file
+* Include the location of the generated `config.hpp` file.
+Also include the `src` directory.
 ```cmake
 target_include_directories(example_scope PRIVATE
-    ${SCOPE_SRC_DIR}
-    ${THIRDPARTY_DIR}
-    ${TOP_DIR}/include
-    ${CUDA_INCLUDE_DIRS}
     ${PROJECT_BINARY_DIR}/src
-    "src"
+    src
 )
 ```
 
@@ -118,44 +120,23 @@ The readme should describe the objective of the plugin, the contributors of the 
 All the source files for the benchmarks should be in `src`.
 The organization within `src` is up to the developer.
 
-## Adding the plugin to Scope
+## Adding the plugin to SCOPE
 
-First, this plugin should be added to scope as a submodule:
+If you have push access to SCOPE, go ahead and add it.
+Otherwise, you can submit a PR.
+
+First, this scope should be added to SCOPE as a submodule.
+Add with https so anyone can clone.
 
     cd scope
-    git submodule add git@github.com:c3sr/example_scope.git
+    git submodule add https://github.com/c3sr/example_scope.git
 
-Then, the submodule URL should be changed to be cloned in the same way as scope was.
-Th `url` field in `scope/.gitmodules` for the submodule should be modified to be a relative path.
-For example, if the submodule is hosted under `c3sr/example_scope.git`, it would look like:
-
-```
-[submodule "example_scope"]
-	path = example_scope
-	url = ../example_scope.git
-```
-
-If the submodule is hosted under `your-account/new_scope.git`, it would look like:
-
-```
-[submodule "new_scope"]
-	path = new_scope
-	url = ../../your-account/new_scope.git
-```
-
-You could also have done 
-
-    git submodule add ../../your-account/example_scope.git
-
-This means that if scope is cloned with https, your submodule will be too.
-If scope is cloned with ssh, your submodule will be too.
-
-Then, the [scope CMakeLists.txt](https://github.com/rai-project/scope/blob/master/CMakeLists.txt) should be modified to load this plugin.
+Then, the [SCOPE CMakeLists.txt](https://github.com/rai-project/scope/blob/master/CMakeLists.txt) should be modified to load this plugin.
 
 An option to enable your scope should be added near the beginning of the CMakeLists.txt file:
 
 ```cmake
-option(ENABLE_EXAMPLE "Include Example|Scope (github.com/c3sr/example_scope)" ON)
+option(ENABLE_EXAMPLE "Include Example|Scope (github.com/c3sr/example_scope)" OFF)
 ```
 
 A snippet of code to add your scope to the build should be added further down, after the main scope `add_executable(...)`.
@@ -163,35 +144,35 @@ A snippet of code to add your scope to the build should be added further down, a
 ```cmake
 if (ENABLE_EXAMPLE)
   scope_status("Enabling Example|Scope")
-  add_subdirectory(${TOP_DIR}/example_scope)
-  target_link_libraries(bench example_scope)
+  add_subdirectory(${SRC_TOP_DIR}/example_scope)
+  target_link_libraries(scope example_scope)
 endif(ENABLE_EXAMPLE)
 ```
 
-## Scope Utilities
+## SCOPE Utilities
 
 The plugin may (should) make use of utilities provided by Scope in scope.
 Those utilities can be included with `#include scope/utils/...`
 
-## Scope Initialization
+## SCOPE Initialization Hooks
 
-Scope allows plugins to register initialization callbacks in scope/src/init.hpp (if desired).
-These callbacks will be invoked with no guaranteed ordering before `main()` is executed.
+SCOPE exposes initialization as part of the life cycle.
+This happens in [src/example/init.cpp](src/example/init.cpp).
+The two macros `SCOPE_REGISTER_BEFORE_INIT` and `SCOPE_REGISTER_INIT` allow a scope to provide SCOPE with a `void(*)()` and `int (*)()` functions, respectively, that are invoked during the BeforeInit and Init lifecycle stages.
 
-Callbacks are `int (*fn)(int argc, char *const *argv)` functions that will be passed the command line flags that Scope is executed with.
-Callbacks can be registered with the `SCOPE_INIT` macro:
 
-```cpp
-// plugin/src/init.cpp
-#include "scope/init/init.hpp
+## SCOPE Command Line Options
 
-void plugin_init(int argc, char *const *argv) {
-    (void) argc;
-    (void) argv;
-}
+Scopes may also register Clara `clara::Opt`s to describe command line options that they look for.
+This may be done statically with the `SCOPE_REGISTER_OPT` macro, or during the BeforeInit hook using `RegisterOpt`.
+Flag variables can be declared with the `DECLARE_FLAG_...` and `DEFINE_FLAG_...` family of macros exposed in [scope/src/scope/utils/commandlineflags.hpp]().
+An example of this usage is in in [src/example/init.cpp](src/example/init.cpp).
 
-SCOPE_INIT(pugin_init);
-```
+
+## SCOPE Version String
+
+A scope should provide SCOPE with a version string to print when the user passes `--version` on the command line.
+This is done by using `RegisterVersion` during the BeforeInit hook.
 
 ## Citation
 
