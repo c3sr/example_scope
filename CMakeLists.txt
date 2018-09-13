@@ -9,16 +9,16 @@ project(Example|Scope LANGUAGES CXX VERSION 1.0.1)
 # Look for sugar.cmake files in the plugin src directory
 sugar_include(src)
 
-# The scope is an object library that Scope will be linked with
+# The scope is an object library that SCOPE will be linked with
 scope_add_library(example_scope OBJECT ${example_SOURCES} ${example_CUDA_SOURCES} )
 
-# The scope should have some include directories from scope
+# The scope should have some include directories from SCOPE
 target_include_scope_directories(example_scope)
 
 # The scope requires linking against SCOPE's libraries
 target_link_scope_libraries(example_scope)
 
-# The scope may have other includes or other properties too
+# Example|Scope may have other includes or other properties too, like any other CMake project
 target_include_directories(example_scope PRIVATE 
     ${PROJECT_BINARY_DIR}/src
     src
