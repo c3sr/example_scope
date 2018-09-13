@@ -1,3 +1,8 @@
+option(ENABLE_EXAMPLE "Include Example|Scope (github.com/c3sr/example_scope)" ON)
+if(NOT ENABLE_EXAMPLE)
+  return()
+endif()
+
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(Example|Scope LANGUAGES CXX VERSION 1.0.1)
 
@@ -5,7 +10,7 @@ project(Example|Scope LANGUAGES CXX VERSION 1.0.1)
 sugar_include(src)
 
 # The scope is an object library that Scope will be linked with
-add_library(example_scope OBJECT ${example_SOURCES} ${example_CUDA_SOURCES} )
+scope_add_library(example_scope OBJECT ${example_SOURCES} ${example_CUDA_SOURCES} )
 
 # The scope should have some include directories from scope
 target_include_scope_directories(example_scope)
