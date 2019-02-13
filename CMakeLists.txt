@@ -10,7 +10,7 @@ project(Example|Scope LANGUAGES CXX VERSION 1.0.1)
 sugar_include(src)
 
 # The scope is an object library that SCOPE will be linked with
-scope_add_library(example_scope OBJECT ${example_SOURCES} ${example_CUDA_SOURCES} )
+scope_add_library(example_scope OBJECT ${example_SOURCES})
 
 # The scope should have some include directories from SCOPE
 target_include_scope_directories(example_scope)
